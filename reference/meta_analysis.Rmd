@@ -1,0 +1,549 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+# Meta analysis - Negativity Bias in Intergroup Contact
+
+K.Colyvas, Feb-2023, updated Jun-2023 to respond to reviewer questions on bias tests. Jul-2023 add SD of raw Fisher z's and Dec-2023 update panel labels for figure 3. Update Jan-2024 to assist in responding to editor comments, including add analysis to replicate part of the CMA analyses for contact valence and the evaluative congruence generalisations in Table 3 in the paper using the n=236 data set.
+
+
+# Setting up the data sets
+
+```{r, warning=F, message=F}
+library(metafor)
+library(readxl)
+library(tidyverse)
+library(grid)
+library(gridExtra)
+
+options(width=120)
+
+```
+
+# Multivariate data
+
+```{r, warning=F, message=F}
+data1 = read_xlsx("Meta-analysis-data.xlsx",sheet="Data for R - multivariate",skip=1)
+nrow(data1)
+#names(data1)
+
+# Additional variables needed later
+
+# Moderator v45_Contact_Valence
+# 1 = Indicator of Positive Contact 
+# 2 = Indicator of Ambivalent Contact (Neutrally Valenced or >1 Variable Clash) 
+# 3 = Indicator of Negative Contact 
+# 4 = No Info Given 
+data1$v45_Contact_Valence = factor(data1$v45_Contact_Valence,labels=c("Pos","Ambiv","Neg","Uncl"))
+
+# Calculate 2 level contact valence variable combining Ambiv with Pos to compare with Neg
+# data1$v45_Contact_Valence3 = fct_collapse(data1$v45_Contact_Valence, Pos_Ambiv = c("Pos", "Ambiv"), Neg = c("Neg","Uncl"))
+
+# Calculate 2 level contact valence variable combining Ambiv with Pos to compare with Neg
+# Note: even though there are no entries for Uncl in data2 need to combine the factor levels with Neg otherwise they hang around - annoying
+# data1$v45_Contact_Valence2 = fct_collapse(data1$v45_Contact_Valence, Pos = c("Pos", "Ambiv"), Neg = c("Neg","Uncl"))
+
+# Make purity into a categorical variable
+data1$v57_Purity_Ax = factor(data1$v57_Purity_Ax)
+
+# Calculate effect estimates as Fisher Z transformation of the correlation coefficient
+data1=escalc(measure="ZCOR",ri=v72a_ES_Per_P_T,ni=v55_Sample_N, append=T,data=data1,var.names =c("pt","ptv"))
+
+```
+
+#  Univariate data used for CMA analysis
+
+Replicating a small part of the analyses that were carried out in CMA software to provide additional information for Table 3 to respond to an editor's request. 
+
+```{r, warning=F, message=F}
+data5 = read_xlsx("Meta-analysis-data.xlsx",sheet="Data for R - univariate",skip=1)
+nrow(data5)
+
+# Make a factor version of contact valence
+data5$v45_Contact_Valence2 = factor(data5$v45_Contact_Valence,labels=c("Pos","Ambiv","Neg","Uncl"))
+
+# Calculate effect estimates as Fisher Z transformation of the correlation coefficient
+# From Brett Sales
+# the versions of the spreadsheet with n=236 use 57c to designate the purest effect sizes to be included in the small dataset
+# The output variables are the same in the n=236 dataet.
+# 72a is the P&T output data and 72d is the evaluative congruence data.
+
+data5=escalc(measure="ZCOR",ri=v72a_ES_Per_P_T,ni=v55_Sample_N, append=T,data=data5,var.names =c("pt236","pt236v"))
+
+# Removing Uncl only
+data6 = filter(data5,v45_Contact_Valence2 != "Uncl")
+nrow(data6)
+
+data6=escalc(measure="ZCOR",ri=v72d_incongruent,ni=v55_Sample_N, append=T,data=data6,var.names =c("ec236","ec236v"))
+
+```
+
+### Summary statistics for the categorical explanatory variables
+
+For the smaller data set, n=236.
+
+```{r}
+# A function to convert all columns to character as there is a mixture of numeric and character
+convert_to_char = function(x) as.character(x)
+
+# Remove continuous variables or other types for which summary stats are not required
+data5_long = pivot_longer(select(data5, !c(v1RAWAge,v3RAWGender,PctMales,v4PercentFem,v5_Participant_type,
+            v42IV_IDs_Name,v47DV_ID,v50OutJudge,v54_Pg_No_Data_Extracted_From,v55_Sample_N,
+             v57aIV_DV,v59DispersionSD,v60_Test_Type,v61_Raw_Correlation_Data,
+             v65_P_Value,	v71_DValue_Per_P_T, v72bReCodedR, v72a_ES_Per_P_T,
+             v72c_ABS_ES, v72d_incongruent, pt236:pt236v)),
+             Year:v45_Contact_Valence2,names_to = "variable",values_to = "code",values_transform = convert_to_char)
+
+# Calculate counts for each variable/code combination
+summary1 = data5_long %>% group_by(variable,code) %>% summarise(n = n())
+  
+# Total counts for a variable
+totals = data5_long %>% group_by(variable) %>% summarise(N = n())
+
+# Combine the two to make a summary stats table
+summary5 = left_join(summary1,totals) %>%
+  # Calculate %'s
+  mutate(percent = n/N)
+
+# Save so can be imported to Excel for easier handling and transfer to the tables in the paper
+write.csv(summary5,"Descriptive statistics univariate.csv")
+
+```
+
+
+```{r,echo=F, warning=F, message=F, fig.dim = c(7,10)}
+
+forest_multi_page = function(df,yi,vi,var,coef,page_size=50,title_text="") {
+# Plots each effect size group separately with page size control
+grps = levels(df[[var]])
+#print(grps)
+
+df$yi = df[[yi]]
+df$vi = df[[vi]]
+  
+for (i in 1:length(grps)) {
+  df1=subset(df,df[[var]] == grps[i])
+
+  k = nrow(df1)
+  #print(k)
+  counter = 1
+  for (j in 1:k) {
+    while (counter < k) {
+    if((counter +  page_size -1) < k & counter < k) {
+        tmin= counter
+        tmax = counter + page_size -1      
+        tindex = tmin:tmax
+      }
+      else {
+        tmin= counter
+        tmax = k 
+        tindex = tmin:tmax
+      }
+   # print(tindex)
+      
+    forest(df1$yi,df1$vi, slab=paste0(df1$Paper_No,"-",df1$Study_No,"-",df1$Sample_No),alim=c(-1.5,1.5), 
+            xlim=c(-3,3), cex=1,subset=tindex, 
+            header =paste("Paper-Study-Sample               ",title_text," - ",grps[i]),refline = coef[i],
+           xlab="Fisher's Z Transformed Correlation Coefficient")
+
+    counter = counter + page_size
+    }
+  }
+ }
+}
+
+forest_multi_page_univariate = function(df,yi,vi,var,coef,page_size=50,title_text="") {
+# Plots each effect size group separately with page size control
+grps = levels(df[[var]])
+#print(grps)
+
+df$yi = df[[yi]]
+df$vi = df[[vi]]
+  
+for (i in 1:length(grps)) {
+  df1=subset(df,df[[var]] == grps[i])
+
+  k = nrow(df1)
+  #print(k)
+  counter = 1
+  for (j in 1:k) {
+    while (counter < k) {
+    if((counter +  page_size -1) < k & counter < k) {
+        tmin= counter
+        tmax = counter + page_size -1      
+        tindex = tmin:tmax
+      }
+      else {
+        tmin= counter
+        tmax = k 
+        tindex = tmin:tmax
+      }
+   # print(tindex)
+      
+    forest(df1$yi,df1$vi, slab=paste0(df1$EffectSizeNumber),alim=c(-1.5,1.5), 
+            xlim=c(-3,3), cex=1,subset=tindex, 
+            header =paste("Effect size number             ",title_text," - ",grps[i]),refline = coef[i],
+           xlab="Fisher's Z Transformed Correlation Coefficient")
+
+    counter = counter + page_size
+    }
+  }
+ }
+}
+
+```
+
+# Multilevel models structure
+
+Fit a series of models with increasing levels of hierarchy to see which is the most appropriate for the data.  
+
+```{r}
+m1=rma.mv(pt,ptv,mods = ~ 1,random = ~ 1 | Paper_No , data=data1,method="REML", sparse=TRUE)
+summary(m1)
+
+
+m2=rma.mv(pt,ptv,mods = ~ 1,random = ~ 1 | Paper_No/Study_No , data=data1,method="REML", sparse=TRUE)
+summary(m2)
+
+m3=rma.mv(pt,ptv,mods = ~ 1,random = ~ 1 | Paper_No/Study_No/Sample_No , data=data1,method="REML", sparse=TRUE)
+summary(m3)
+
+# AIC confirms that the 3 level hierarchical structure is the best description of the data
+AIC(m1,m2,m3)
+
+# Repeat with moderator in the model
+
+m1m=rma.mv(pt,ptv,mods = ~ 1 + v45_Contact_Valence,random = ~ 1 | Paper_No , data=data1,method="REML", sparse=TRUE)
+summary(m1m)
+
+m2m=rma.mv(pt,ptv,mods = ~ 1 + v45_Contact_Valence,random = ~ 1 | Paper_No/Study_No , data=data1,method="REML", sparse=TRUE)
+summary(m2m)
+
+m3m=rma.mv(pt,ptv,mods = ~ 1 + v45_Contact_Valence,random = ~ 1 | Paper_No/Study_No/Sample_No , data=data1,method="REML", sparse=TRUE)
+summary(m3m)
+
+# AIC again confirms that the 3 level hierarchical structure is the best description of the data
+# In fact the improvement in AIC is larger for the change from 2 level to 3 level model with the moderator included than without
+# Note also the AIC is very much lower for the model with the moderator contact valence included showing it is an important explanatory variable
+AIC(m1m,m2m,m3m)
+
+```
+
+Based on the AIC comparisons the 3 level model with paper at the top level, study nested within paper and sample nested within study proved to be the best fit to the data. All moderator meta-analyses below will use the 3 level random effects structure.
+
+# Contact valence - 4 levels
+
+```{r}
+
+table(data1$v45_Contact_Valence)
+
+# Create a new version of the contact valence variable to expand the panel labels to full words
+data1$v45_Contact_Valence1 = data1$v45_Contact_Valence
+data1$v45_Contact_Valence1 = factor(data1$v45_Contact_Valence,labels = c("Positive","Ambivalent","Negative","Unclassifiable"))
+
+figure3 = ggplot(data1,aes(x=v72a_ES_Per_P_T)) + geom_histogram(fill="darkgrey",colour="black",bins=60) + labs(y="Count",x="Correlation coefficient - Pettigrew & Tropp effect") + facet_grid(rows = vars(v45_Contact_Valence1))
+
+figure3 
+
+pdf(file="Figure 3 4x6 inches.pdf", width=4, height=6)
+  figure3
+graphics.off()
+
+pdf(file="Figure 3 6x6 inches.pdf", width=6, height=6)
+  figure3
+graphics.off()
+
+# Model with Pos as the reference value
+m4=rma.mv(pt,ptv,mods = ~ 1 + v45_Contact_Valence,random = ~ 1 | Paper_No/Study_No/Sample_No , data=data1,method="REML", sparse=TRUE)
+summary(m4)
+
+# Significance of the moderator variable
+anova(m4,btt=2:4)
+
+# Repeat the model fit without the intercept to show the model means for each condition
+m5=rma.mv(pt,ptv,mods = ~ -1 + v45_Contact_Valence,random = ~ 1 | Paper_No/Study_No/Sample_No , data=data1,method="REML", sparse=TRUE)
+summary(m5)
+
+# Prediction intervals - the package calculates a prediction interval for every observation
+# There are only 4 predicted values as the model only contains a single categorical variable with 4 levels
+# so summarise by capturing the unique vales only
+# Assignment to the correct level is by comparison with the summary table above and comparing the predicted and CI values
+
+pi = unique(as.data.frame(predict(m5),MARGIN=2))
+
+# Print out in the same order as the summary table
+knitr::kable(pi[c(1,3,2,4),],digits = 4)
+
+# Pairwise differences between the means
+anova(m5, X=rbind(c(1,0,-1,0), c(1,-1,0,0), c(1,0,0,-1),
+                  c(0,1,-1,0), c(0,1,0,-1), c(0,0,1,-1)))
+
+# Pairwise differences between the means - signs reversed
+anova(m5, X=rbind(c(-1,0,1,0), c(-1,1,0,0), c(-1,0,0,1),
+                  c(0,-1,1,0), c(0,-1,0,1), c(0,0,-1,1)))
+
+```
+
+### Evaluative congruence test
+
+A direct test of the difference between the positive and negative with coefficients (as if the Pos coefficient had been made positive and the difference between 2 positive coefficients had been calculated).
+
+```{r}
+anova(m5,X=rbind(c(1,0,1,0)))
+```
+
+# Analysis using unvariate data set
+
+### Contact valence effect
+
+Repeat of the original analyses carried out in CMA using the highest purity sample within each paper/study/sample combination. In most cases there was only study/sample combination per paper but in some cases there were multiple studies and or samples per paper. A long table in the descriptive statistics section shows these combinations.
+
+```{r}
+
+table(data5$v45_Contact_Valence2)
+
+ggplot(data5,aes(x=v72a_ES_Per_P_T)) + geom_histogram(fill="darkgrey",colour="black",bins=60) + labs(x="Correlation coefficient - Pettigrew & Tropp effect") + facet_grid(rows = vars(v45_Contact_Valence2))
+
+# Use method of moments estimator for random effect -  used by CMA software
+# In the metafor package this is called the DL estimator (DerSimonian-Laird) 
+# DerSimonian, R., & Laird, N. (1986). Meta-analysis in clinical trials. 
+# Controlled Clinical Trials, 7(3), 177–188. https://doi.org/10.1016/0197-2456(86)90046-2
+
+# No moderator effect
+um3=rma.uni(pt236,pt236v,mods = ~ 1, data=data5, method = "DL")
+summary(um3)
+
+# Model with Pos as the reference value
+um4=rma.uni(pt236,pt236v,mods = ~ 1 + v45_Contact_Valence2, data=data5, method = "DL")
+summary(um4)
+
+# Significance of the moderator variable
+anova(um4,btt=2:4)
+
+# Repeat the model fit without the intercept to show the model means for each condition
+um5=rma.uni(pt236,pt236v,mods = ~ -1 + v45_Contact_Valence2, data=data5, method = "DL")
+summary(um5)
+
+# Compare with REML estimator - the default for metafor
+# very similar results to method of moments (DL) estimator except the amount of heterogeneity
+# is larger (tau 0.29 instead of 0.21 using DL method)
+um5r=rma.uni(pt236,pt236v,mods = ~ -1 + v45_Contact_Valence2, data=data5, method = "REML")
+summary(um5r)
+
+# Prediction intervals - the package calculates a prediction interval for every observation
+# There are only 4 predicted values as the model only contains a single categorical variable with 4 levels
+# so summarise by capturing the unique vales only
+# Assignment to the correct level is by comparison with the summary table above and comparing the predicted and CI values
+
+pi2 = unique(as.data.frame(predict(um5),MARGIN=2))
+
+# Print out in the same order as the summary table
+knitr::kable(pi2[c(1,3,2,4),],digits = 4)
+
+# Pairwise differences between the means
+anova(um5, X=rbind(c(1,0,-1,0), c(1,-1,0,0), c(1,0,0,-1),
+                  c(0,1,-1,0), c(0,1,0,-1), c(0,0,1,-1)))
+
+# Pairwise differences between the means - signs reversed
+anova(um5, X=rbind(c(-1,0,1,0), c(-1,1,0,0), c(-1,0,0,1),
+                  c(0,-1,1,0), c(0,-1,0,1), c(0,0,-1,1)))
+
+```
+
+
+### Evaluative congruence test
+
+```{r}
+anova(um5,X=rbind(c(1,0,1,0)))
+
+```
+
+
+# Independent/purest effects scored as evaluative congruent generalization
+
+For the bottom (3rd) section of Table 3. This was based on Independent/purest effects scored as evaluative congruent generalizations. This is a different variable so the effect sizes need to be recalculated and the data set used should not contain the unclassified grouping (so use data6). The unclassified category is dropped for this analysis.
+
+
+```{r}
+table(data6$v45_Contact_Valence2)
+
+# Use the data set without the unclassified category
+um6=rma.uni(ec236,ec236v,mods = ~ -1 + v45_Contact_Valence2, data=data6)
+summary(um6)
+
+# Pairwise differences between the means - order of differences to make all differences positive
+anova(um6, X=rbind(c(-1,0,1), c(-1,1,0), c(0,-1,1)))
+
+# Prediction intervals - the package calculates a prediction interval for every observation - show only unique values
+pi3 = unique(as.data.frame(predict(um6),MARGIN=2))
+
+# Prediction intervals in the same order as the summary table
+knitr::kable(pi3[c(1,3,2),],digits = 4)
+
+```
+
+
+# Forest plots by contact valence groups - multivariate data
+
+The forest plots have been segmented into the 4 contact valence groups. The mean effect size for each group is from the models (multilevel, m5 or single random effect with reduced data set, um5) with the moderator effect (model coefficient) shown by the vertical dotted line in each plot. 
+
+
+```{r}
+# Save forest plot to a pdf file
+pdf(file="Forest plot Contact valence n=936.pdf", width=8, height=11)
+  forest_multi_page(data1,"pt","ptv","v45_Contact_Valence",coef(m5),page_size = 55,title_text="P&T~Contact Valence")
+graphics.off()
+
+# Forest plot for the univariate data set
+pdf(file="Forest plot Contact valence univariate n=236.pdf", width=8, height=11)
+  forest_multi_page_univariate(data5,"pt236","pt236v","v45_Contact_Valence2",coef(um5),page_size = 55,title_text="P&T~Contact Valence")
+graphics.off()
+
+```
+
+
+# Bias tests
+
+With the multilevel model model used there are only a couple of functions available in metafor for testing bias, the funnel plot and the rank correlation test for funnel plot asymmetry. Both are applied below to the multilevel model and the random effect model.
+
+```{r, fig.width=9,fig.height=9}
+# Funnel plots
+
+op=par(mfrow=c(2,2))
+  funnel(m3, main="Multilevel model - no moderator, n=936")
+  funnel(um3, main="Univariate model, no moderator, n=236")
+
+# Funnel plots with valence as a moderator variable
+  funnel(m5, main="Multilevel model - valence as moderator, n=936")
+  funnel(um5, main="Univariate model - valence as moderator, n=236")
+par(op)
+
+
+# Rank test for bias
+
+# All data
+# The 3 variants used below all give the same result
+# Use multilevel model without moderator
+ranktest(m3)
+# Specify the effect sizes and variance explicitly
+ranktest(x=pt,vi=ptv,data=data1)
+
+# For the unvariate data n=236 - again same results - model choice makes no difference to this test
+ranktest(um3)
+
+  
+```
+
+# About alternative bias tests
+
+We don't think they are reliable due to large between study heterogeneity. 
+
+See Harrer, M., Cuijpers, P., Furukawa, T.A., & Ebert, D.D. (2021). Doing Meta-Analysis with R: A Hands-On Guide. Boca Raton, FL and London: Chapman & Hall/CRC Press. ISBN 978-0-367-61007-4.
+
+In particular Section 9.2:
+https://bookdown.org/MathiasHarrer/Doing_Meta_Analysis_in_R/pub-bias.html#addressing-pubbias
+
+### Investigation
+
+The book referred to is excellent - we would recommend it to anyone wanting to undertake meta-analysis using the R package. After reading Ch 9 on bias tests this important point was noted at the end of the chapter.
+
+"Lastly, it is of note that there is currently no method providing acceptable results when the between-study heterogeneity is high (Aert, Wicherts, and Assen 2016, i.e. I^2^ ~ 75%). This means that publication bias analyses of meta-analyses with very high heterogeneity should at best be avoided altogether. Analyses without outliers or in more homogeneous subgroups can often be used as a practical workaround, but do not solve the general problem."
+
+Therefore prior to carrying any of the bias tests in Ch 9 a check on the between study variability was carried out.
+
+**Firstly for the model using the n=236 data set (model um5 above) I^2^ = 96.3%.**
+
+The other analyses carried out were based on the 4 level multilevel model using the advice in Ch 10.2.2 Distribution of Variance Across Levels on calculating the multilevel version of I^2^. As an attempt to install the the R package associated with the book failed an alternative approach provided by the metafor package author was used.  
+https://metafor-project.org/doku.php/tips:i2_multilevel_multivariate
+
+```{r}
+# Using model m5 above
+
+W <- diag(1/m5$vi)
+X <- model.matrix(m5)
+P <- W - W %*% X %*% solve(t(X) %*% W %*% X) %*% t(X) %*% W
+100 * sum(m5$sigma2) / (sum(m5$sigma2) + (m5$k-m5$p)/sum(diag(P)))
+
+```
+
+Quoting from the link above 
+
+"Therefore, this statistic can be thought of as the overall I^2^  value that indicates how much of the total variance can be attributed to the total amount of heterogeneity (which is the sum of between- and within-cluster heterogeneity)."
+
+**In this case the total I^2^ from the multilevel model using the n=936 observations was 95.9%.** 
+
+One more level of detail on this can be provided, again quoting from the article 
+"However, we can also break things down to estimate how much of the total variance can be attributed to between- and within-cluster heterogeneity separately:"
+
+
+```{r}
+100 * m5$sigma2 / (sum(m5$sigma2) + (m5$k-m5$p)/sum(diag(P)))
+
+```
+
+This shows the relative proportions of the variance due to the sources of variation in the data. 
+Differences between papers contributed 13.9% to the total heterogeneity, studies within a paper being by far the largest source of variability with 72.4% and finally samples nested within a study and paper contributing 9.6%.
+
+```{r}
+# In addition to this the actual value of total variability (variance) from all 3 sources of variation is given by 
+sum(m5$sigma2)
+
+# Expressing this as an SD
+sqrt(sum(m5$sigma2))
+      
+```
+
+Totaling the 3 sources of variability and expressing it as an SD (`r round(sqrt(sum(m5$sigma2)),3)`) provides an estimate of the overall variability observed  over all combinations of papers, studies and samples. 
+
+**I^2^ for model without contact valence for n=936 data**
+
+```{r}
+# Using model m3 above
+
+W <- diag(1/m3$vi)
+X <- model.matrix(m3)
+P <- W - W %*% X %*% solve(t(X) %*% W %*% X) %*% t(X) %*% W
+100 * sum(m3$sigma2) / (sum(m3$sigma2) + (m3$k-m3$p)/sum(diag(P)))
+
+```
+
+Also the variance components.
+
+```{r}
+100 * m3$sigma2 / (sum(m3$sigma2) + (m3$k-m3$p)/sum(diag(P)))
+
+```
+
+For model m3 without contact valence as moderator I^2^ = 96.3%. 
+
+Differences between papers contributed 20.1% to the total heterogeneity, studies within a paper being by far the largest source of variability with 69.2% and finally samples nested within a study and paper contributing 6.9%. As above for the model with contract valence the total variability is calculated below.
+
+```{r}
+# In addition to this the actual value of total variability (variance) from all 3 sources of variation is given by 
+sum(m3$sigma2)
+
+# Expressing this as an SD
+sqrt(sum(m3$sigma2))
+
+```
+
+### Conclusion about bias tests
+
+We concluded that bias tests should not be carried out for the two meta-analyses carried out.
+
+# SDs for reporting degree of heterogeneity in meta-analysis
+
+For the meta-analysis on the univariate data set (n=236) the SD for heterogeneity between studies is  0.21.  
+(From the value tau from the summary output for model um5.
+
+For the n=936 data set the SDs for the components are come from model m5.
+
+Differences between papers SD = 0.087.  
+Studies nested within Papers SD = 0.20.  
+Samples nested with studies and papers SD = 0.072.  
+
+(From the summary output from model m5 under the heading variance components in the column headed sqrt.)
+
+Totaling the 3 sources of variability and expressing it as an SD (`r round(sqrt(sum(m3$sigma2)),3)`) provides an estimate of the overall variability observed  over all combinations of papers, studies and samples. 
+

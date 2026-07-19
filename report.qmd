@@ -1,0 +1,92 @@
+---
+title: "A within-sample check of negativity asymmetry in intergroup contact"
+subtitle: "A reproducible exploratory re-analysis of the Paolini et al. (2024) dataset"
+author: "WIP analysis"
+date: last-modified
+format:
+  html:
+    toc: true
+    code-fold: true
+    theme: cosmo
+    css: report/styles.css
+execute:
+  freeze: true
+---
+
+## Executive summary
+
+The published meta-analysis primarily compares positive- and negative-contact effects across different samples. This report asks a narrower question: **when the same sample contains both a positive-contact and a negative-contact association with the same coded outcome, is the negative association larger?**
+
+In this exploratory paired re-analysis, the answer is **no**. Using one highest-purity positive/negative pair per sample, the pooled contrast was negative across all assumed sampling-error correlations:
+
+| Assumed correlation between sampling errors | Pooled contrast | 95% CI |
+|---:|---:|---:|
+| 0.00 | −0.068 | [−0.118, −0.019] |
+| 0.25 | −0.065 | [−0.114, −0.016] |
+| 0.50 | −0.064 | [−0.113, −0.016] |
+| 0.75 | −0.064 | [−0.112, −0.015] |
+| 0.90 | −0.063 | [−0.111, −0.015] |
+
+Here, the contrast is Fisher-z(negative-contact effect) minus Fisher-z(positive-contact effect after reversing the Pettigrew–Tropp sign). Positive values would support a stronger negative-contact association; the estimate is instead modestly negative.
+
+This is **not a definitive refutation** of the published result. It is a better-aligned within-sample test, but it remains observational, depends on coder-defined outcome matching and purity selection, and lacks the sampling covariance between the two correlations.
+
+## Data and selection
+
+The analysis uses the authors’ public OSF workbook, *Impact MA Appendix F2_InputTables_Supplementary data – n936 dataset 26 Feb 2023.xlsx* ([OSF project](https://osf.io/38rpj/)). The workbook contains 936 effect-size rows.
+
+Selection steps:
+
+1. Retain rows marked by the authors as included for the within-subjects analysis (`v74 = 1`).
+2. Retain positive and negative contact rows only, and retain valence-congruent effects (`v45d = 0`) so that the comparison is about the magnitude of the expected direction rather than a mixture of congruent and incongruent findings.
+3. Require positive and negative effects from the same paper, study, sample, and coded outcome (`v49_DV_Details`).
+4. Where a sample had multiple eligible outcomes, select the pair with the lowest combined purity score (`v57_Purity_Ax`). This yields one independent contrast per sample.
+
+The resulting dataset contains **74 paired samples**, covering **27,009 participants as reported in the paired rows**. The participant total is descriptive, not an effective meta-analytic sample size: the analysis weights effect estimates, not individuals.
+
+## Estimand
+
+For each paired sample:
+
+\[
+D_i = z(r_{negative,i}) - z(-r_{positive,i})
+\]
+
+The sign convention follows the source paper: positive effects indicate more prejudice. Thus, a beneficial positive-contact correlation is reversed before comparison, while a detrimental negative-contact correlation retains its positive direction. A positive \(D_i\) would indicate a larger negative-contact association.
+
+The pooled estimate uses a random-effects DerSimonian–Laird model. The two correlations share participants and the outcome, so their sampling errors are dependent. The workbook does not provide the required covariance. I therefore report sensitivity analyses over assumed sampling-error correlations (ρ = 0 to 0.90). The substantive conclusion does not change across that range.
+
+## Interpretation
+
+The paired evidence in this dataset does not reproduce the published negativity asymmetry. If anything, the selected within-sample contrasts point in the opposite direction: positive-contact associations are somewhat larger on average than negative-contact associations.
+
+However, several qualifications are important:
+
+- This is still a comparison of associations, not causal effects.
+- The “same outcome” criterion uses the authors’ coded outcome field; it does not guarantee identical instruments or identical analytic specifications.
+- Selecting the best-purity pair per sample is transparent but data-reductive. Alternative pair-selection rules could change the estimate.
+- The unknown covariance affects standard errors more than the point estimate here, but exact dependent-correlation inference requires the raw data or additional reported correlations.
+- Multiple samples may come from the same article or broader dataset. One contrast per paper–study–sample avoids duplicate rows within a sample but does not fully remove higher-level dependence.
+
+The appropriate conclusion is therefore: **the published between-sample asymmetry is not clearly supported by this narrower paired within-sample check; the result should be treated as an exploratory sensitivity analysis, not as a definitive estimate of a within-person negativity bias.**
+
+## Reproducibility
+
+The analysis script is [`scripts/analyse.js`](scripts/analyse.js). It reads the public OSF workbook and writes the paired analysis dataset to [`report/pairs.json`](report/pairs.json) and model results to [`report/summary.json`](report/summary.json). The source workbook is not redistributed in this repository.
+
+The exact source paper is [Paolini, Gibbs, Sales, Anderson, and McIntyre (2024)](https://doi.org/10.1037/bul0000439). This report is an independent WIP re-analysis, not an official correction or replication by the authors.
+
+## Selected paired contrasts
+
+The following are illustrative rather than a replacement for the full downloadable paired dataset.
+
+| Sample | Target | n | Positive r | Negative r | Contrast |
+|---|---|---:|---:|---:|---:|
+| Aberson (2015), Study 1 | African Americans | 539 | −0.18 | 0.26 | 0.084 |
+| Aberson et al., Study 1 | African Americans | 227 | −0.17 | 0.09 | −0.081 |
+| Aberson et al., Study 2 | Hispanic Americans | 155 | −0.38 | 0.39 | 0.012 |
+| Aberson et al., Study 3 | Gay men | 217 | −0.46 | 0.10 | −0.397 |
+| Graf & Sczesny (2019) | African immigrants | 472 | −0.527 | 0.496 | −0.042 |
+| Alperin et al. (2014) | Fat people | 1,176 | −0.27 | 0.47 | 0.233 |
+
+The complete 74-pair dataset is in [`report/pairs.json`](report/pairs.json).
