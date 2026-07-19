@@ -1,0 +1,186 @@
+{
+  "source_rows": 936,
+  "eligible_rows": 532,
+  "matched_groups": 197,
+  "matched_samples": 76,
+  "all_rows": 444,
+  "basic": {
+    "label": "all rows: z(r) ~ negative contact",
+    "n": 444,
+    "samples": 76,
+    "terms": [
+      {
+        "estimate": -0.3822487810965449,
+        "se": 0.022307471054299827,
+        "z": -17.135460140958713,
+        "lo": -0.4259714243629726,
+        "hi": -0.33852613783011726,
+        "p": 0
+      },
+      {
+        "estimate": 0.709355004564595,
+        "se": 0.04317345661931537,
+        "z": 16.43035003704653,
+        "lo": 0.6247350295907369,
+        "hi": 0.7939749795384531,
+        "p": 0
+      }
+    ],
+    "cov": [
+      [
+        0.0004976232648384247,
+        -0.0008446690957111558
+      ],
+      [
+        -0.0008446690957111556,
+        0.0018639473564599058
+      ]
+    ]
+  },
+  "basicAsymmetry": {
+    "label": "negative minus reversed positive; all rows",
+    "estimate": -0.05514255762849485,
+    "se": 0.021812015793341563,
+    "lo": -0.09789410858344431,
+    "hi": -0.012391006673545382,
+    "z": -2.528081684468976,
+    "p": 0.009867475364982559
+  },
+  "prejudice": {
+    "label": "classified prejudice: z(r) ~ negative * high prejudice",
+    "n": 270,
+    "samples": 41,
+    "terms": [
+      {
+        "estimate": -0.362156381728169,
+        "se": 0.028700461634611943,
+        "z": -12.618486292618327,
+        "lo": -0.4184092865320084,
+        "hi": -0.3059034769243296,
+        "p": 0
+      },
+      {
+        "estimate": 0.6657822246274989,
+        "se": 0.04738051919817039,
+        "z": 14.051813612317027,
+        "lo": 0.572916406999085,
+        "hi": 0.7586480422559129,
+        "p": 0
+      },
+      {
+        "estimate": 0.016606836762408483,
+        "se": 0.050645761141521625,
+        "z": 0.327901810301622,
+        "lo": -0.0826588550749739,
+        "hi": 0.11587252859979087,
+        "p": 0.6937447141787483
+      },
+      {
+        "estimate": -0.014815432764815784,
+        "se": 0.07972573395500517,
+        "z": -0.18582999528329427,
+        "lo": -0.1710778713166259,
+        "hi": 0.14144700578699435,
+        "p": 0.8177044395086039
+      }
+    ],
+    "cov": [
+      [
+        0.000823716498039832,
+        -0.001168475789230317,
+        -0.0008237164980398328,
+        0.0011684757892303152
+      ],
+      [
+        -0.001168475789230317,
+        0.002244913599488193,
+        0.0011684757892303152,
+        -0.002244913599488193
+      ],
+      [
+        -0.0008237164980398328,
+        0.001168475789230317,
+        0.0025649931216040617,
+        -0.003465893488445178
+      ],
+      [
+        0.001168475789230317,
+        -0.002244913599488193,
+        -0.0034658934884451743,
+        0.006356192654664264
+      ]
+    ]
+  },
+  "asymmetry": {
+    "non_prejudiced": {
+      "label": "negative minus reversed positive; non-prejudiced",
+      "estimate": -0.058530538828839074,
+      "se": 0.02942577840476362,
+      "lo": -0.11620506450217577,
+      "hi": -0.0008560131555023776,
+      "z": -1.9890905866185615,
+      "p": 0.039728858667595235
+    },
+    "prejudiced": {
+      "label": "negative minus reversed positive; prejudiced",
+      "estimate": -0.04013229806883789,
+      "se": 0.04343632986997796,
+      "lo": -0.1252675046139947,
+      "hi": 0.04500290847631891,
+      "z": -0.9239339094479129,
+      "p": 0.30921732987831163
+    },
+    "difference": {
+      "label": "prejudiced minus non-prejudiced asymmetry",
+      "estimate": 0.018398240760001183,
+      "se": 0.05246514259296172,
+      "lo": -0.08443343872220378,
+      "hi": 0.12122992024220615,
+      "z": 0.35067551236331407,
+      "p": 0.6750872100686145
+    }
+  },
+  "prejudice_counts": {
+    "prejudiced": {
+      "rows": 142,
+      "negative": 71,
+      "negative_fraction": 0.5,
+      "samples": 16
+    },
+    "non_prejudiced": {
+      "rows": 128,
+      "negative": 68,
+      "negative_fraction": 0.53125,
+      "samples": 25
+    }
+  },
+  "eligible_prejudice_counts": {
+    "prejudiced": {
+      "rows": 173,
+      "negative": 74,
+      "samples": 18,
+      "negative_fraction": 0.4277456647398844
+    },
+    "non_prejudiced": {
+      "rows": 164,
+      "negative": 73,
+      "samples": 28,
+      "negative_fraction": 0.4451219512195122
+    }
+  },
+  "sample_prejudice_balance": {
+    "prejudiced": {
+      "samples": 18,
+      "mean_negative_fraction": 0.4454559601618425
+    },
+    "non_prejudiced": {
+      "samples": 28,
+      "mean_negative_fraction": 0.4669484888817187
+    }
+  },
+  "notes": [
+    "All-row model uses inverse Fisher-z sampling variances and sample-cluster-robust SEs; it is a practical multilevel/meta-regression sensitivity model, not a substitute for the original raw-data covariance structure.",
+    "High prejudice is the workbook classification v8 raw = 1 or 3; raw = -99 is excluded from the prejudice analysis.",
+    "The prejudice moderator is sample-level and categorical, not a continuous measure of prejudice strength."
+  ]
+}
