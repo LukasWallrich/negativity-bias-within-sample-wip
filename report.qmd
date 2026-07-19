@@ -15,7 +15,7 @@ execute:
 
 ## Executive summary
 
-The published meta-analysis primarily compares positive- and negative-contact effects across different samples. This report asks a narrower question: **when the same sample contains both a positive-contact and a negative-contact association with the same coded outcome, is the negative association larger?**
+The published meta-analysis primarily compares positive- and negative-contact effects across different samples. This report asks a narrower question: **when the same sample contains both a positive-contact and a negative-contact association with the same source-coded outcome, is the negative association larger?**
 
 In this exploratory paired re-analysis, the answer is **no**. Using one highest-purity positive/negative pair per sample, the pooled contrast was negative across all assumed sampling-error correlations:
 
@@ -89,4 +89,4 @@ The following are illustrative rather than a replacement for the full downloadab
 | Graf & Sczesny (2019) | African immigrants | 472 | −0.527 | 0.496 | −0.042 |
 | Alperin et al. (2014) | Fat people | 1,176 | −0.27 | 0.47 | 0.233 |
 
-The complete 74-pair dataset is in [`report/pairs.json`](report/pairs.json).
+The complete 76-pair dataset is in [`report/pairs.json`](report/pairs.json).
