@@ -29,7 +29,9 @@ for (const x of eligible) {
 function bestPair(sampleRows) {
   const byDv = new Map();
   for (const x of sampleRows) {
-    const k = String(x.v49_DV_Details);
+    // v49 is only a broad DV family code. v47 contains the more specific
+    // source-coded outcome label and is therefore used for pairing.
+    const k = clean(x.v47_IV_Details).toLowerCase();
     if (!byDv.has(k)) byDv.set(k, {pos: [], neg: []});
     byDv.get(k)[String(x.v45_Recode_Pos_Ambiv_Neg_Unc) === '0' ? 'pos' : 'neg'].push(x);
   }

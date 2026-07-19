@@ -115,28 +115,28 @@ ul.task-list li input[type="checkbox"] {
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0.00</td>
-<td style="text-align: right;">−0.068</td>
-<td style="text-align: right;">[−0.118, −0.019]</td>
+<td style="text-align: right;">−0.055</td>
+<td style="text-align: right;">[−0.105, −0.005]</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">0.25</td>
-<td style="text-align: right;">−0.065</td>
-<td style="text-align: right;">[−0.114, −0.016]</td>
+<td style="text-align: right;">−0.054</td>
+<td style="text-align: right;">[−0.104, −0.005]</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">0.50</td>
-<td style="text-align: right;">−0.064</td>
-<td style="text-align: right;">[−0.113, −0.016]</td>
+<td style="text-align: right;">−0.054</td>
+<td style="text-align: right;">[−0.103, −0.004]</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">0.75</td>
-<td style="text-align: right;">−0.064</td>
-<td style="text-align: right;">[−0.112, −0.015]</td>
+<td style="text-align: right;">−0.053</td>
+<td style="text-align: right;">[−0.101, −0.004]</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">0.90</td>
-<td style="text-align: right;">−0.063</td>
-<td style="text-align: right;">[−0.111, −0.015]</td>
+<td style="text-align: right;">−0.052</td>
+<td style="text-align: right;">[−0.100, −0.003]</td>
 </tr>
 </tbody>
 </table>
@@ -150,10 +150,10 @@ ul.task-list li input[type="checkbox"] {
 <ol type="1">
 <li>Retain rows marked by the authors as included for the within-subjects analysis (<code>v74 = 1</code>).</li>
 <li>Retain positive and negative contact rows only, and retain valence-congruent effects (<code>v45d = 0</code>) so that the comparison is about the magnitude of the expected direction rather than a mixture of congruent and incongruent findings.</li>
-<li>Require positive and negative effects from the same paper, study, sample, and coded outcome (<code>v49_DV_Details</code>).</li>
+<li>Require positive and negative effects from the same paper, study, sample, and the same more-specific source-coded outcome label (<code>v47_IV_Details</code>). The broad <code>v49_DV_Details</code> family code was not used because it can combine distinct outcomes within a sample.</li>
 <li>Where a sample had multiple eligible outcomes, select the pair with the lowest combined purity score (<code>v57_Purity_Ax</code>). This yields one independent contrast per sample.</li>
 </ol>
-<p>The resulting dataset contains <strong>74 paired samples</strong>, covering <strong>27,009 participants as reported in the paired rows</strong>. The participant total is descriptive, not an effective meta-analytic sample size: the analysis weights effect estimates, not individuals.</p>
+<p>The resulting dataset contains <strong>76 paired samples</strong>, covering <strong>27,719 participants as reported in the paired rows</strong>. The participant total is descriptive, not an effective meta-analytic sample size: the analysis weights effect estimates, not individuals.</p>
 </section>
 <section id="estimand" class="level2">
 <h2 class="anchored" data-anchor-id="estimand">Estimand</h2>
@@ -208,8 +208,8 @@ ul.task-list li input[type="checkbox"] {
 <td>African Americans</td>
 <td style="text-align: right;">539</td>
 <td style="text-align: right;">−0.18</td>
-<td style="text-align: right;">0.26</td>
-<td style="text-align: right;">0.084</td>
+<td style="text-align: right;">0.44</td>
+<td style="text-align: right;">0.290</td>
 </tr>
 <tr class="even">
 <td>Aberson et al., Study 1</td>

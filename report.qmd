@@ -21,11 +21,11 @@ In this exploratory paired re-analysis, the answer is **no**. Using one highest-
 
 | Assumed correlation between sampling errors | Pooled contrast | 95% CI |
 |---:|---:|---:|
-| 0.00 | −0.068 | [−0.118, −0.019] |
-| 0.25 | −0.065 | [−0.114, −0.016] |
-| 0.50 | −0.064 | [−0.113, −0.016] |
-| 0.75 | −0.064 | [−0.112, −0.015] |
-| 0.90 | −0.063 | [−0.111, −0.015] |
+| 0.00 | −0.055 | [−0.105, −0.005] |
+| 0.25 | −0.054 | [−0.104, −0.005] |
+| 0.50 | −0.054 | [−0.103, −0.004] |
+| 0.75 | −0.053 | [−0.101, −0.004] |
+| 0.90 | −0.052 | [−0.100, −0.003] |
 
 Here, the contrast is Fisher-z(negative-contact effect) minus Fisher-z(positive-contact effect after reversing the Pettigrew–Tropp sign). Positive values would support a stronger negative-contact association; the estimate is instead modestly negative.
 
@@ -39,10 +39,10 @@ Selection steps:
 
 1. Retain rows marked by the authors as included for the within-subjects analysis (`v74 = 1`).
 2. Retain positive and negative contact rows only, and retain valence-congruent effects (`v45d = 0`) so that the comparison is about the magnitude of the expected direction rather than a mixture of congruent and incongruent findings.
-3. Require positive and negative effects from the same paper, study, sample, and coded outcome (`v49_DV_Details`).
+3. Require positive and negative effects from the same paper, study, sample, and the same more-specific source-coded outcome label (`v47_IV_Details`). The broad `v49_DV_Details` family code was not used because it can combine distinct outcomes within a sample.
 4. Where a sample had multiple eligible outcomes, select the pair with the lowest combined purity score (`v57_Purity_Ax`). This yields one independent contrast per sample.
 
-The resulting dataset contains **74 paired samples**, covering **27,009 participants as reported in the paired rows**. The participant total is descriptive, not an effective meta-analytic sample size: the analysis weights effect estimates, not individuals.
+The resulting dataset contains **76 paired samples**, covering **27,719 participants as reported in the paired rows**. The participant total is descriptive, not an effective meta-analytic sample size: the analysis weights effect estimates, not individuals.
 
 ## Estimand
 
@@ -82,7 +82,7 @@ The following are illustrative rather than a replacement for the full downloadab
 
 | Sample | Target | n | Positive r | Negative r | Contrast |
 |---|---|---:|---:|---:|---:|
-| Aberson (2015), Study 1 | African Americans | 539 | −0.18 | 0.26 | 0.084 |
+| Aberson (2015), Study 1 | African Americans | 539 | −0.18 | 0.44 | 0.290 |
 | Aberson et al., Study 1 | African Americans | 227 | −0.17 | 0.09 | −0.081 |
 | Aberson et al., Study 2 | Hispanic Americans | 155 | −0.38 | 0.39 | 0.012 |
 | Aberson et al., Study 3 | Gay men | 217 | −0.46 | 0.10 | −0.397 |
