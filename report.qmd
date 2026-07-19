@@ -31,6 +31,24 @@ Here, the contrast is Fisher-z(negative-contact effect) minus Fisher-z(positive-
 
 This is **not a definitive refutation** of the published result. It is a better-aligned within-sample test, but it remains observational, depends on coder-defined outcome matching and purity selection, and lacks the sampling covariance between the two correlations.
 
+## All eligible pairs and prejudice moderation
+
+The purest-pair analysis is not the only way to use the matched data. I therefore retained **all 444 eligible effect rows** in the 197 source-coded outcome groups that contained both positive- and negative-contact effects, spanning the same 76 samples. A weighted meta-regression of Fisher-z correlations on contact valence used sample-clustered standard errors to account for repeated effects within samples.
+
+The implied all-row contrast was **−0.055** (95% CI [−0.098, −0.012], p = .010), almost identical to the purest-pair estimate of approximately −0.054. Expanding beyond the selected pairs therefore does not reveal a negative-contact asymmetry; the estimate remains slightly in the direction of larger positive-contact associations.
+
+The workbook also contains a coarse sample-level prejudice classification. Using the coded distinction between prejudiced and non-prejudiced/egalitarian samples, the estimated contrast was:
+
+| Sample classification | Contrast | 95% CI |
+|---|---:|---:|
+| Non-prejudiced/egalitarian | −0.059 | [−0.116, −0.001] |
+| Prejudiced | −0.040 | [−0.125, 0.045] |
+| Difference (prejudiced − non-prejudiced) | 0.018 | [−0.084, 0.121] |
+
+The moderator difference is not statistically distinguishable from zero (p = .675). Nor is negative contact more prevalent in the classified prejudiced samples: among all eligible classified rows, 42.8% were negative-contact rows in prejudiced samples versus 44.5% in non-prejudiced samples. Giving each sample equal weight produced 44.5% versus 46.7%, respectively.
+
+This is only a coarse test of the proposed range-restriction mechanism. The workbook does not provide continuous prejudice scores or within-sample attitude distributions, so it cannot test whether high prejudice simultaneously makes negative contact more likely and creates more room for attitude change. The all-row results are reported as a cluster-robust multilevel/meta-regression sensitivity analysis, not as exact dependent-correlation inference.
+
 ## Data and selection
 
 The analysis uses the authors’ public OSF workbook, *Impact MA Appendix F2_InputTables_Supplementary data – n936 dataset 26 Feb 2023.xlsx* ([OSF project](https://osf.io/38rpj/)). The workbook contains 936 effect-size rows.
@@ -72,7 +90,7 @@ The appropriate conclusion is therefore: **the published between-sample asymmetr
 
 ## Reproducibility
 
-The analysis script is [`scripts/analyse.js`](scripts/analyse.js). It reads the public OSF workbook and writes the paired analysis dataset to [`report/pairs.json`](report/pairs.json) and model results to [`report/summary.json`](report/summary.json). The source workbook is not redistributed in this repository.
+The analysis scripts are [`scripts/analyse.js`](scripts/analyse.js) for the purest-pair analysis and [`scripts/explore_all_multilevel.js`](scripts/explore_all_multilevel.js) for the all-row moderator analysis. The latter writes results to [`report/all_multilevel.json`](report/all_multilevel.json). The source workbook is not redistributed in this repository.
 
 The exact source paper is [Paolini, Gibbs, Sales, Anderson, and McIntyre (2024)](https://doi.org/10.1037/bul0000439). This report is an independent WIP re-analysis, not an official correction or replication by the authors.
 
