@@ -69,6 +69,8 @@
   .hc-composer textarea::placeholder, .hc-composer input::placeholder {
     color: #9aa4af !important;
   }
+  .hc-composer .hc-btn { background: #2c333b !important; color: #e5e9ee !important; border-color: #4b5563 !important; }
+  .hc-composer .hc-btn-primary { background: #2563eb !important; color: #fff !important; border-color: #2563eb !important; }
 }
 </style>
 <script>
@@ -84,6 +86,18 @@
   var script = document.createElement('script');
   script.src = BASE + 'html-comments.js';
   document.body.appendChild(script);
+  document.addEventListener('mouseup', function () {
+    setTimeout(function () {
+      var toolbar = document.querySelector('.hc-toolbar');
+      var selection = window.getSelection();
+      if (!toolbar || !selection || selection.rangeCount === 0) return;
+      var rect = selection.getRangeAt(0).getBoundingClientRect();
+      var below = window.scrollY + rect.bottom + 8;
+      if (below + toolbar.offsetHeight <= window.scrollY + window.innerHeight - 8) {
+        toolbar.style.top = below + 'px';
+      }
+    }, 40);
+  });
 })();
 </script>
 </body>
