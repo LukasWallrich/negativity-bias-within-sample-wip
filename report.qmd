@@ -1,6 +1,6 @@
 ---
-title: "A within-sample check of negativity asymmetry in intergroup contact"
-subtitle: "A reproducible exploratory re-analysis of the Paolini et al. (2024) dataset"
+title: "A cautious within-sample comment on negativity asymmetry"
+subtitle: "Exploratory re-analysis of the Paolini et al. (2024) contact dataset"
 author: "WIP analysis"
 date: last-modified
 format:
@@ -9,102 +9,57 @@ format:
     code-fold: true
     theme: cosmo
     css: report/styles.css
+    include-after-body: comments-include.html
 execute:
   freeze: true
 ---
 
-## Executive summary
+## The short version
 
-The published meta-analysis primarily compares positive- and negative-contact effects across different samples. This report asks a narrower question: **when the same sample contains both a positive-contact and a negative-contact association with the same source-coded outcome, is the negative association larger?**
+The published meta-analysis compares positive- and negative-contact associations largely across different samples. This exploratory re-analysis asks a narrower question: **when the same sample contains both contact valences and the same source-coded outcome, is the negative-contact association larger?**
 
-In this exploratory paired re-analysis, the answer is **no**. Using one highest-purity positive/negative pair per sample, the pooled contrast was negative across all assumed sampling-error correlations:
+In the selected one-pair-per-sample analysis, the answer is not supported. The pooled contrast—Fisher-z(negative-contact *r*) minus Fisher-z(reversed positive-contact *r*)—was approximately **−0.054** across assumed sampling-error correlations from 0 to 0.90. A positive value would indicate the proposed larger negative-contact association; the estimate instead points slightly in the other direction.
 
-| Assumed correlation between sampling errors | Pooled contrast | 95% CI |
-|---:|---:|---:|
-| 0.00 | −0.055 | [−0.105, −0.005] |
-| 0.25 | −0.054 | [−0.104, −0.005] |
-| 0.50 | −0.054 | [−0.103, −0.004] |
-| 0.75 | −0.053 | [−0.101, −0.004] |
-| 0.90 | −0.052 | [−0.100, −0.003] |
+This result should be read as an **exploratory sensitivity analysis**, not as a refutation of the published finding. It uses a different estimand, coder-defined outcome matching, a data-reductive pair-selection rule, and an incompletely known dependence structure.
 
-Here, the contrast is Fisher-z(negative-contact effect) minus Fisher-z(positive-contact effect after reversing the Pettigrew–Tropp sign). Positive values would support a stronger negative-contact association; the estimate is instead modestly negative.
+## What was compared
 
-This is **not a definitive refutation** of the published result. It is a better-aligned within-sample test, but it remains observational, depends on coder-defined outcome matching and purity selection, and lacks the sampling covariance between the two correlations.
+The source workbook contains 936 effect-size rows. I retained rows flagged for the authors’ within-subjects analysis, kept congruent positive- and negative-contact effects, and required effects from the same paper, study, sample, and specific source-coded outcome label (`v47_IV_Details`). Where a sample contained several eligible outcome groups, I selected the pair with the lowest combined coder-defined purity score.
 
-## All eligible pairs and prejudice moderation
+This produced **76 paired samples** covering **27,719 reported participants**. The participant total is descriptive: the meta-analysis weights effect estimates, not individuals.
 
-The purest-pair analysis is not the only way to use the matched data. I therefore retained **all 444 eligible effect rows** in the 197 source-coded outcome groups that contained both positive- and negative-contact effects, spanning the same 76 samples. A weighted meta-regression of Fisher-z correlations on contact valence used sample-clustered standard errors to account for repeated effects within samples.
-
-The implied all-row contrast was **−0.055** (95% CI [−0.098, −0.012], p = .010), almost identical to the purest-pair estimate of approximately −0.054. Expanding beyond the selected pairs therefore does not reveal a negative-contact asymmetry; the estimate remains slightly in the direction of larger positive-contact associations.
-
-The workbook also contains a coarse sample-level prejudice classification. Using the coded distinction between prejudiced and non-prejudiced/egalitarian samples, the estimated contrast was:
-
-| Sample classification | Contrast | 95% CI |
-|---|---:|---:|
-| Non-prejudiced/egalitarian | −0.059 | [−0.116, −0.001] |
-| Prejudiced | −0.040 | [−0.125, 0.045] |
-| Difference (prejudiced − non-prejudiced) | 0.018 | [−0.084, 0.121] |
-
-The moderator difference is not statistically distinguishable from zero (p = .675). Nor is negative contact more prevalent in the classified prejudiced samples: among all eligible classified rows, 42.8% were negative-contact rows in prejudiced samples versus 44.5% in non-prejudiced samples. Giving each sample equal weight produced 44.5% versus 46.7%, respectively.
-
-This is only a coarse test of the proposed range-restriction mechanism. The workbook does not provide continuous prejudice scores or within-sample attitude distributions, so it cannot test whether high prejudice simultaneously makes negative contact more likely and creates more room for attitude change. The all-row results are reported as a cluster-robust multilevel/meta-regression sensitivity analysis, not as exact dependent-correlation inference.
-
-## Data and selection
-
-The analysis uses the authors’ public OSF workbook, *Impact MA Appendix F2_InputTables_Supplementary data – n936 dataset 26 Feb 2023.xlsx* ([OSF project](https://osf.io/38rpj/)). The workbook contains 936 effect-size rows.
-
-Selection steps:
-
-1. Retain rows marked by the authors as included for the within-subjects analysis (`v74 = 1`).
-2. Retain positive and negative contact rows only, and retain valence-congruent effects (`v45d = 0`) so that the comparison is about the magnitude of the expected direction rather than a mixture of congruent and incongruent findings.
-3. Require positive and negative effects from the same paper, study, sample, and the same more-specific source-coded outcome label (`v47_IV_Details`). The broad `v49_DV_Details` family code was not used because it can combine distinct outcomes within a sample.
-4. Where a sample had multiple eligible outcomes, select the pair with the lowest combined purity score (`v57_Purity_Ax`). This yields one independent contrast per sample.
-
-The resulting dataset contains **76 paired samples**, covering **27,719 participants as reported in the paired rows**. The participant total is descriptive, not an effective meta-analytic sample size: the analysis weights effect estimates, not individuals.
-
-## Estimand
-
-For each paired sample:
+For each pair, the contrast was:
 
 \[
 D_i = z(r_{negative,i}) - z(-r_{positive,i})
 \]
 
-The sign convention follows the source paper: positive effects indicate more prejudice. Thus, a beneficial positive-contact correlation is reversed before comparison, while a detrimental negative-contact correlation retains its positive direction. A positive \(D_i\) would indicate a larger negative-contact association.
+The sign reversal follows the source paper’s convention that positive effects indicate more prejudice. The two correlations share participants and outcome information, but the workbook does not report the covariance needed for exact dependent-correlation inference. The reported confidence intervals therefore show sensitivity to assumed sampling-error correlations, rather than identifying a unique standard error.
 
-The pooled estimate uses a random-effects DerSimonian–Laird model. The two correlations share participants and the outcome, so their sampling errors are dependent. The workbook does not provide the required covariance. I therefore report sensitivity analyses over assumed sampling-error correlations (ρ = 0 to 0.90). The substantive conclusion does not change across that range.
+## A broader row-weighted sensitivity analysis
+
+I also retained **all 444 eligible effect rows** in **197 matched outcome groups** from the same 76 samples. This is an inverse-variance weighted meta-regression with **sample-clustered robust standard errors**—not a full multilevel likelihood model. Because samples contribute different numbers of outcomes, it is a row-weighted sensitivity analysis rather than an equal-sample replication of the 76-pair estimate.
+
+Its implied contrast was **−0.055** (95% CI [−0.098, −0.012], nominal *p* = .010). The similar point estimate is informative, but the nominal interval should not be treated as definitive: the sampling covariance between paired correlations is not represented in the point-estimate weights, and the robust calculation assumes independent sample clusters. The 76 samples come from only 47 papers, so dependence among samples from the same paper or dataset may make uncertainty understated.
+
+The coarse workbook classification of samples as “classified prejudiced” versus “classified non-prejudiced/egalitarian” did not provide evidence of moderation. The estimated contrast difference was **0.018** (95% CI [−0.084, 0.121], *p* = .675). This is not a continuous prejudice measure and cannot test the full proposed range-restriction mechanism.
 
 ## Interpretation
 
-The paired evidence in this dataset does not reproduce the published negativity asymmetry. If anything, the selected within-sample contrasts point in the opposite direction: positive-contact associations are somewhat larger on average than negative-contact associations.
+The defensible conclusion is:
 
-However, several qualifications are important:
+> In this exploratory, coder-defined within-sample comparison, the selected contrasts do not reproduce a larger negative-contact association. The estimate is slightly in the opposite direction, but the analysis cannot adjudicate the published between-sample estimand because the estimands, weighting, outcome matching, and dependence structure differ.
 
-- This is still a comparison of associations, not causal effects.
-- The “same outcome” criterion uses the authors’ coded outcome field; it does not guarantee identical instruments or identical analytic specifications.
-- Selecting the best-purity pair per sample is transparent but data-reductive. Alternative pair-selection rules could change the estimate.
-- The unknown covariance affects standard errors more than the point estimate here, but exact dependent-correlation inference requires the raw data or additional reported correlations.
-- Multiple samples may come from the same article or broader dataset. One contrast per paper–study–sample avoids duplicate rows within a sample but does not fully remove higher-level dependence.
+Several uncertainties remain:
 
-The appropriate conclusion is therefore: **the published between-sample asymmetry is not clearly supported by this narrower paired within-sample check; the result should be treated as an exploratory sensitivity analysis, not as a definitive estimate of a within-person negativity bias.**
+- The highest-purity pair per sample is transparent but exploratory; alternative pairing rules could change the estimate.
+- The specific outcome label is a source coding field, not a guarantee that instruments and analytic specifications are identical.
+- The true covariance between the two within-sample correlations is unknown and may vary across samples; changing the assumed covariance changes both weights and uncertainty.
+- The association estimates are not causal effects and do not estimate a within-person negativity bias.
+- Samples from the same paper or broader dataset may not be independent.
 
 ## Reproducibility
 
-The analysis scripts are [`scripts/analyse.js`](scripts/analyse.js) for the purest-pair analysis and [`scripts/explore_all_multilevel.js`](scripts/explore_all_multilevel.js) for the all-row moderator analysis. The latter writes results to [`report/all_multilevel.json`](report/all_multilevel.json). The source workbook is not redistributed in this repository.
+The pure-pair analysis is in [`scripts/analyse.js`](scripts/analyse.js); the row-weighted sensitivity analysis is in [`scripts/explore_all_multilevel.js`](scripts/explore_all_multilevel.js). Results are in [`report/summary.json`](report/summary.json), [`report/pairs.json`](report/pairs.json), and [`report/all_multilevel.json`](report/all_multilevel.json). The public source workbook is available from the authors’ [OSF project](https://osf.io/38rpj/) but is not redistributed here.
 
-The exact source paper is [Paolini, Gibbs, Sales, Anderson, and McIntyre (2024)](https://doi.org/10.1037/bul0000439). This report is an independent WIP re-analysis, not an official correction or replication by the authors.
-
-## Selected paired contrasts
-
-The following are illustrative rather than a replacement for the full downloadable paired dataset.
-
-| Sample | Target | n | Positive r | Negative r | Contrast |
-|---|---|---:|---:|---:|---:|
-| Aberson (2015), Study 1 | African Americans | 539 | −0.18 | 0.44 | 0.290 |
-| Aberson et al., Study 1 | African Americans | 227 | −0.17 | 0.09 | −0.081 |
-| Aberson et al., Study 2 | Hispanic Americans | 155 | −0.38 | 0.39 | 0.012 |
-| Aberson et al., Study 3 | Gay men | 217 | −0.46 | 0.10 | −0.397 |
-| Graf & Sczesny (2019) | African immigrants | 472 | −0.527 | 0.496 | −0.042 |
-| Alperin et al. (2014) | Fat people | 1,176 | −0.27 | 0.47 | 0.233 |
-
-The complete 76-pair dataset is in [`report/pairs.json`](report/pairs.json).
+This is an independent WIP re-analysis of [Paolini, Gibbs, Sales, Anderson, and McIntyre (2024)](https://doi.org/10.1037/bul0000439), not an official correction or replication by the authors.

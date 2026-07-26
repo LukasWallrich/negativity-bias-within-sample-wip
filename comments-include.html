@@ -1,0 +1,16 @@
+<script>
+(function () {
+  window.HC_CONFIG = {
+    endpoint: 'https://script.google.com/macros/s/AKfycbyx858xfSCgHQ8RmbfbMsdzcmzrkNs_JZVmqeEBVrH-S6g8YJbI32CY7if-k8oTzg-eyQ/exec',
+    project: 'negativity-bias-within-sample-v2'
+  };
+  var BASE = 'https://html-comments.surge.sh/';
+  var link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = BASE + 'html-comments.css';
+  document.head.appendChild(link);
+  var script = document.createElement('script');
+  script.src = BASE + 'html-comments.js';
+  document.body.appendChild(script);
+})();
+</script>
