@@ -122,6 +122,10 @@
       window.visualViewport.addEventListener('resize', syncViewport, { passive: true });
       window.visualViewport.addEventListener('scroll', syncViewport, { passive: true });
     }
+    // Compatibility shim for the older shared asset currently served by Surge.
+    document.addEventListener('pointerdown', function (e) {
+      if (e.target.closest && e.target.closest('.hc-toolbar')) e.stopPropagation();
+    }, true);
     document.addEventListener('focusin', function (e) {
       if (e.target.matches && e.target.matches('.hc-panel input, .hc-panel textarea, .hc-composer input, .hc-composer textarea')) {
         setTimeout(function () { try { e.target.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (_) {} }, 80);

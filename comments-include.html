@@ -72,6 +72,12 @@
       window.visualViewport.addEventListener('resize', syncViewport, { passive: true });
       window.visualViewport.addEventListener('scroll', syncViewport, { passive: true });
     }
+    // The currently published shared asset has an older pointerdown handler
+    // that can suppress the Suggest click on mobile. Stop that legacy handler
+    // without cancelling the pointer event itself, so the button still clicks.
+    document.addEventListener('pointerdown', function (e) {
+      if (e.target.closest && e.target.closest('.hc-toolbar')) e.stopPropagation();
+    }, true);
     document.addEventListener('focusin', function (e) {
       if (e.target.matches && e.target.matches('.hc-panel input, .hc-panel textarea, .hc-composer input, .hc-composer textarea')) {
         setTimeout(function () { try { e.target.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (_) {} }, 80);
