@@ -49,40 +49,6 @@
   <p>The pure-pair analysis is in <a href="https://github.com/LukasWallrich/negativity-bias-within-sample-wip/blob/master/scripts/analyse.js"><code>scripts/analyse.js</code></a>; the row-weighted sensitivity analysis is in <a href="https://github.com/LukasWallrich/negativity-bias-within-sample-wip/blob/master/scripts/explore_all_multilevel.js"><code>scripts/explore_all_multilevel.js</code></a>. Results are in <a href="report/summary.json"><code>report/summary.json</code></a>, <a href="report/pairs.json"><code>report/pairs.json</code></a>, and <a href="report/all_multilevel.json"><code>report/all_multilevel.json</code></a>. The public source workbook is available from the authors’ <a href="https://osf.io/38rpj/">OSF project</a> but is not redistributed here.</p>
   <p>This is an independent WIP re-analysis of <a href="https://doi.org/10.1037/bul0000439">Paolini, Gibbs, Sales, Anderson, and McIntyre (2024)</a>, not an official correction or replication by the authors.</p>
 </main>
-<style>
-:root { --hc-vv-height: 100vh; --hc-vv-offset-top: 0px; }
-.hc-toolbar, .hc-toolbar *, .hc-composer, .hc-composer *,
-.hc-toolbar *::before, .hc-toolbar *::after,
-.hc-composer *::before, .hc-composer *::after { box-sizing: border-box; }
-.hc-panel { top: var(--hc-vv-offset-top, 0px) !important; height: var(--hc-vv-height, 100vh) !important; max-height: var(--hc-vv-height, 100vh) !important; }
-.hc-list { min-height: 0 !important; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
-.hc-composer { width: min(320px, calc(100vw - 16px)) !important; max-width: calc(100vw - 16px) !important; max-height: calc(var(--hc-vv-height, 100vh) - 16px) !important; overflow-y: auto !important; }
-.hc-composer textarea, .hc-composer input { box-sizing: border-box !important; max-width: 100% !important; min-width: 0 !important; }
-.hc-toolbar { touch-action: manipulation; user-select: none; flex-wrap: wrap; }
-.hc-btn:disabled { opacity: .55; cursor: not-allowed; }
-@media (max-width: 899px) {
-  .hc-composer {
-    position: fixed !important;
-    top: 8px !important;
-    left: 8px !important;
-    width: calc(100vw - 16px) !important;
-    max-width: calc(100vw - 16px) !important;
-    max-height: calc(100dvh - 16px) !important;
-    overflow-y: auto !important;
-  }
-}
-@media (prefers-color-scheme: dark) {
-  .hc-composer, .hc-composer textarea, .hc-composer input {
-    background: #23282e !important;
-    color: #e5e9ee !important;
-  }
-  .hc-composer textarea::placeholder, .hc-composer input::placeholder {
-    color: #9aa4af !important;
-  }
-  .hc-composer .hc-btn { background: #2c333b !important; color: #e5e9ee !important; border-color: #4b5563 !important; }
-  .hc-composer .hc-btn-primary { background: #2563eb !important; color: #fff !important; border-color: #2563eb !important; }
-}
-</style>
 <script>
 (function () {
   window.HC_CONFIG = {
@@ -93,77 +59,9 @@
   var link = document.createElement('link');
   link.rel = 'stylesheet'; link.href = BASE + 'html-comments.css';
   document.head.appendChild(link);
-  var script = document.createElement('script');
-  script.src = BASE + 'html-comments.js';
-  document.body.appendChild(script);
-  document.addEventListener('mouseup', function () {
-    setTimeout(function () {
-      var toolbar = document.querySelector('.hc-toolbar');
-      var selection = window.getSelection();
-      if (!toolbar || !selection || selection.rangeCount === 0) return;
-      var rect = selection.getRangeAt(0).getBoundingClientRect();
-      var mobile = window.matchMedia && window.matchMedia('(max-width: 899px)').matches;
-      var below = mobile ? rect.bottom + 8 : window.scrollY + rect.bottom + 8;
-      var above = mobile ? rect.top - toolbar.offsetHeight - 8 : window.scrollY + rect.top - toolbar.offsetHeight - 8;
-      var bottom = mobile ? window.innerHeight : window.scrollY + window.innerHeight;
-      var top = below + toolbar.offsetHeight <= bottom - 8 ? below : Math.max(mobile ? 4 : window.scrollY + 4, above);
-      toolbar.style.top = Math.min(top, bottom - toolbar.offsetHeight - 4) + 'px';
-    }, 40);
-  });
-  (function () {
-    function syncViewport() {
-      var h = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-      if (h) document.documentElement.style.setProperty('--hc-vv-height', h + 'px');
-      document.documentElement.style.setProperty('--hc-vv-offset-top', (window.visualViewport ? window.visualViewport.offsetTop : 0) + 'px');
-    }
-    syncViewport();
-    window.addEventListener('resize', syncViewport, { passive: true });
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', syncViewport, { passive: true });
-      window.visualViewport.addEventListener('scroll', syncViewport, { passive: true });
-    }
-    // Compatibility shim for the older shared asset currently served by Surge.
-    document.addEventListener('pointerdown', function (e) {
-      if (e.target.closest && e.target.closest('.hc-toolbar')) e.stopPropagation();
-    }, true);
-    document.addEventListener('focusin', function (e) {
-      if (e.target.matches && e.target.matches('.hc-panel input, .hc-panel textarea, .hc-composer input, .hc-composer textarea')) {
-        setTimeout(function () { try { e.target.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (_) {} }, 80);
-      }
-    });
-    function repairIdentity() {
-      var identity = document.querySelector('.hc-who-input');
-      var label = document.querySelector('.hc-who-lbl');
-      if (identity) {
-        identity.required = true;
-        identity.setAttribute('aria-required', 'true');
-        identity.placeholder = 'Your name (required)';
-        if (label) label.textContent = identity.value.trim() ? 'You:' : 'Name required —';
-      }
-      var name = document.querySelector('.hc-composer .hc-name');
-      var submit = document.querySelector('.hc-composer .hc-btn-primary');
-      if (name) { name.required = true; name.setAttribute('aria-required', 'true'); name.placeholder = 'Your name (required)'; }
-      if (submit && name) { submit.disabled = !name.value.trim(); submit.setAttribute('aria-disabled', submit.disabled ? 'true' : 'false'); }
-    }
-    document.addEventListener('input', repairIdentity, true);
-    document.addEventListener('click', function (e) {
-      if (e.target.closest && e.target.closest('.hc-composer .hc-btn-primary')) window.__hcSubmissionPending = true;
-    }, true);
-    var observer = new MutationObserver(function () {
-      repairIdentity();
-      if (window.__hcSubmissionPending) {
-        var panel = document.querySelector('.hc-panel');
-        if (panel && panel.classList.contains('hc-open')) {
-          panel.classList.remove('hc-open');
-          panel.setAttribute('aria-hidden', 'true');
-          document.documentElement.classList.remove('hc-panel-open');
-          window.__hcSubmissionPending = false;
-        }
-      }
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
-    setTimeout(repairIdentity, 200);
-  })();
+  var s = document.createElement('script');
+  s.src = BASE + 'html-comments.js';
+  document.head.appendChild(s);
 })();
 </script>
 </body>
