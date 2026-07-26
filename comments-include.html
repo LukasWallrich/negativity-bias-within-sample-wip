@@ -1,3 +1,25 @@
+<style>
+@media (max-width: 899px) {
+  .hc-composer {
+    position: fixed !important;
+    top: 8px !important;
+    left: 8px !important;
+    width: calc(100vw - 16px) !important;
+    max-width: calc(100vw - 16px) !important;
+    max-height: calc(100dvh - 16px) !important;
+    overflow-y: auto !important;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  .hc-composer, .hc-composer textarea, .hc-composer input {
+    background: #23282e !important;
+    color: #e5e9ee !important;
+  }
+  .hc-composer textarea::placeholder, .hc-composer input::placeholder {
+    color: #9aa4af !important;
+  }
+}
+</style>
 <script>
 (function () {
   window.HC_CONFIG = {

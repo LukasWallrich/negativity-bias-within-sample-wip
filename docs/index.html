@@ -49,6 +49,28 @@
   <p>The pure-pair analysis is in <a href="https://github.com/LukasWallrich/negativity-bias-within-sample-wip/blob/master/scripts/analyse.js"><code>scripts/analyse.js</code></a>; the row-weighted sensitivity analysis is in <a href="https://github.com/LukasWallrich/negativity-bias-within-sample-wip/blob/master/scripts/explore_all_multilevel.js"><code>scripts/explore_all_multilevel.js</code></a>. Results are in <a href="report/summary.json"><code>report/summary.json</code></a>, <a href="report/pairs.json"><code>report/pairs.json</code></a>, and <a href="report/all_multilevel.json"><code>report/all_multilevel.json</code></a>. The public source workbook is available from the authors’ <a href="https://osf.io/38rpj/">OSF project</a> but is not redistributed here.</p>
   <p>This is an independent WIP re-analysis of <a href="https://doi.org/10.1037/bul0000439">Paolini, Gibbs, Sales, Anderson, and McIntyre (2024)</a>, not an official correction or replication by the authors.</p>
 </main>
+<style>
+@media (max-width: 899px) {
+  .hc-composer {
+    position: fixed !important;
+    top: 8px !important;
+    left: 8px !important;
+    width: calc(100vw - 16px) !important;
+    max-width: calc(100vw - 16px) !important;
+    max-height: calc(100dvh - 16px) !important;
+    overflow-y: auto !important;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  .hc-composer, .hc-composer textarea, .hc-composer input {
+    background: #23282e !important;
+    color: #e5e9ee !important;
+  }
+  .hc-composer textarea::placeholder, .hc-composer input::placeholder {
+    color: #9aa4af !important;
+  }
+}
+</style>
 <script>
 (function () {
   window.HC_CONFIG = {
