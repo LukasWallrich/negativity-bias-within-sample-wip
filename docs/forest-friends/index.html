@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#1f4b3a" />
+    <title>When the Forest Called Together</title>
+    <style>
+      :root {
+        --ink: #1c352c;
+        --leaf: #255946;
+        --moss: #789d61;
+        --paper: #fbf7e9;
+        --sun: #e8b753;
+        --rust: #a64f2d;
+      }
+
+      * { box-sizing: border-box; }
+      html { background: var(--leaf); scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 15% 10%, rgba(255, 255, 255, .8), transparent 26rem),
+          var(--paper);
+        font-family: Georgia, "Times New Roman", serif;
+      }
+
+      header {
+        min-height: 100svh;
+        display: grid;
+        place-items: center;
+        padding: 2rem;
+        background:
+          linear-gradient(180deg, rgba(21, 58, 43, .08), rgba(21, 58, 43, .48)),
+          url("images/01-dawn-smoke.png") center / cover;
+        color: #fffdf4;
+        text-align: center;
+      }
+      .title-card {
+        max-width: 39rem;
+        padding: clamp(1.8rem, 6vw, 4rem);
+        border: 1px solid rgba(255, 253, 244, .55);
+        border-radius: 1.5rem;
+        background: rgba(20, 51, 39, .62);
+        box-shadow: 0 1.25rem 4rem rgba(0, 0, 0, .28);
+        backdrop-filter: blur(4px);
+      }
+      .eyebrow {
+        margin: 0 0 1rem;
+        font-family: system-ui, sans-serif;
+        font-size: .75rem;
+        font-weight: 700;
+        letter-spacing: .16em;
+        text-transform: uppercase;
+      }
+      h1 {
+        margin: 0;
+        font-size: clamp(2.7rem, 8vw, 5.6rem);
+        line-height: .93;
+        font-weight: 700;
+      }
+      .subtitle { margin: 1.4rem auto 0; font-size: clamp(1.1rem, 2.5vw, 1.45rem); line-height: 1.5; }
+      .start {
+        display: inline-block;
+        margin-top: 2rem;
+        padding: .85rem 1.25rem;
+        border-radius: 100vmax;
+        background: var(--sun);
+        color: #17352a;
+        font-family: system-ui, sans-serif;
+        font-weight: 800;
+        text-decoration: none;
+      }
+
+      main { max-width: 78rem; margin: 0 auto; padding: clamp(1rem, 4vw, 3.5rem) 1rem 4rem; }
+      .spread {
+        overflow: hidden;
+        margin: 0 auto clamp(2.5rem, 7vw, 5rem);
+        border-radius: 1.25rem;
+        background: #fffdf5;
+        box-shadow: 0 .7rem 2.5rem rgba(18, 53, 40, .17);
+      }
+      .spread img { display: block; width: 100%; height: auto; }
+      .words { max-width: 48rem; padding: clamp(1.4rem, 4vw, 3rem); }
+      .number {
+        margin: 0 0 .5rem;
+        color: var(--rust);
+        font-family: system-ui, sans-serif;
+        font-size: .78rem;
+        font-weight: 800;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+      }
+      h2 { margin: 0 0 .9rem; font-size: clamp(1.7rem, 4vw, 2.7rem); line-height: 1.08; }
+      .words p { margin: 0; font-size: clamp(1.12rem, 2.5vw, 1.45rem); line-height: 1.58; }
+      .words p + p { margin-top: .8rem; }
+      .promise {
+        padding: clamp(1.6rem, 5vw, 3rem);
+        border-radius: 1.25rem;
+        background: var(--leaf);
+        color: #fffdf4;
+        text-align: center;
+      }
+      .promise h2 { color: #fffdf4; }
+      .promise p { max-width: 48rem; margin: 0 auto; font-size: clamp(1.1rem, 2.4vw, 1.35rem); line-height: 1.55; }
+      footer { padding: 1.5rem; background: #163d30; color: #e9f1dc; text-align: center; font-family: system-ui, sans-serif; font-size: .9rem; line-height: 1.55; }
+      footer p { max-width: 55rem; margin: .25rem auto; }
+
+      @media (min-width: 52rem) {
+        .spread { display: grid; grid-template-columns: 1.35fr .9fr; align-items: center; }
+        .spread:nth-child(even) img { order: 2; }
+        .spread:nth-child(even) .words { order: 1; }
+      }
+      @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="title-card">
+        <p class="eyebrow">A forest story about courage, care &amp; climate</p>
+        <h1>When the Forest Called Together</h1>
+        <p class="subtitle">Mira, Otis, Fern and Pip learn that small voices can make a very big difference.</p>
+        <a class="start" href="#page-1">Begin the story ↓</a>
+      </div>
+    </header>
+
+    <main>
+      <article class="spread" id="page-1">
+        <img src="images/01-dawn-smoke.png" alt="Four woodland friends notice a small plume of smoke beyond their forest." />
+        <div class="words">
+          <p class="number">Page one</p>
+          <h2>A thin grey ribbon</h2>
+          <p>One bright morning, Mira Squirrel saw a thin grey ribbon climbing above the faraway hills.</p>
+          <p>“Smoke,” whispered Otis Owl. Fern Deer listened. Pip Hedgehog felt the ground grow warm beneath his tiny paws.</p>
+        </div>
+      </article>
+
+      <article class="spread" id="page-2">
+        <img src="images/02-acorn-alarm.png" alt="Otis rings an acorn bell as woodland animals gather beside a stream." />
+        <div class="words">
+          <p class="number">Page two</p>
+          <h2>Ring the acorn bell</h2>
+          <p>Otis flew high and rang the old acorn bell. Mira hurried along the branches. Fern called to the families below, and Pip found the cool path beside the stream.</p>
+          <p>“Stay together,” they said. “Water and open ground are this way.”</p>
+        </div>
+      </article>
+
+      <article class="spread" id="page-3">
+        <img src="images/03-together-to-water.png" alt="Forest animals help one another travel safely beside a stream." />
+        <div class="words">
+          <p class="number">Page three</p>
+          <h2>Every paw, wing and hoof</h2>
+          <p>Along the sparkling stream, everyone helped. Mira reached a paw to a little dormouse. Pip marched beside the ducklings. Otis watched the sky, while Fern led the gentle procession.</p>
+          <p>Even the beavers guided water into the thirsty woodland edge. No one was left behind.</p>
+        </div>
+      </article>
+
+      <article class="spread" id="page-4">
+        <img src="images/04-safe-meadow.png" alt="The woodland animals safely reunite in a sunny meadow by the stream." />
+        <div class="words">
+          <p class="number">Page four</p>
+          <h2>The meadow held them all</h2>
+          <p>At last, in a green meadow beside the stream, the animals found one another. The sky cleared. The fire was safely contained far away.</p>
+          <p>They counted every nestling, kit and cub—then listened to the rain patter softly on the leaves.</p>
+        </div>
+      </article>
+
+      <article class="spread" id="page-5">
+        <img src="images/05-forest-council.png" alt="Woodland animals hold a council around a stump plan while children and a ranger plant trees in the distance." />
+        <div class="words">
+          <p class="number">Page five</p>
+          <h2>A plan for cooler days</h2>
+          <p>“Hot, dry days make fires fiercer,” said Otis. So the friends called a forest council.</p>
+          <p>Together they would protect streams, grow native trees and ask people to care for the Earth: use clean energy, travel kindly, and speak up for every living thing.</p>
+        </div>
+      </article>
+
+      <section class="promise" aria-label="The forest's promise">
+        <h2>Small paws. Big voices. One living world.</h2>
+        <p>Mira, Otis, Fern and Pip knew the forest would need many friends—animals and people alike—to keep it safe, cool and full of song.</p>
+      </section>
+    </main>
+
+    <footer>
+      <p>For grown-ups and children: in a real fire, follow emergency-service instructions and get to safety. This story celebrates looking after one another and caring for our shared climate.</p>
+      <p>Illustrated story prototype · 2026</p>
+    </footer>
+  </body>
+</html>
