@@ -75,14 +75,35 @@
 
       main { max-width: 78rem; margin: 0 auto; padding: clamp(1rem, 4vw, 3.5rem) 1rem 4rem; }
       .spread {
+        position: relative;
         overflow: hidden;
         margin: 0 auto clamp(2.5rem, 7vw, 5rem);
         border-radius: 1.25rem;
-        background: #fffdf5;
+        min-height: clamp(32rem, 60vw, 44rem);
+        display: flex;
+        align-items: end;
+        background: #163d30;
         box-shadow: 0 .7rem 2.5rem rgba(18, 53, 40, .17);
       }
-      .spread img { display: block; width: 100%; height: auto; }
-      .words { max-width: 48rem; padding: clamp(1.4rem, 4vw, 3rem); }
+      .spread::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, rgba(17, 47, 36, .54), transparent 68%), linear-gradient(0deg, rgba(17, 47, 36, .18), transparent 38%);
+      }
+      .spread img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
+      .words {
+        position: relative;
+        z-index: 1;
+        width: min(40rem, 92%);
+        margin: clamp(1rem, 4vw, 3.5rem);
+        padding: clamp(1.4rem, 4vw, 2.8rem);
+        border: 1px solid rgba(255, 253, 244, .65);
+        border-radius: 1rem;
+        background: rgba(255, 253, 244, .9);
+        box-shadow: 0 .75rem 2rem rgba(9, 34, 24, .24);
+        backdrop-filter: blur(6px);
+      }
       .number {
         margin: 0 0 .5rem;
         color: var(--rust);
@@ -95,6 +116,24 @@
       h2 { margin: 0 0 .9rem; font-size: clamp(1.7rem, 4vw, 2.7rem); line-height: 1.08; }
       .words p { margin: 0; font-size: clamp(1.12rem, 2.5vw, 1.45rem); line-height: 1.58; }
       .words p + p { margin-top: .8rem; }
+      .detail {
+        display: grid;
+        grid-template-columns: minmax(0, 1.15fr) minmax(14rem, .85fr);
+        gap: clamp(1rem, 4vw, 3rem);
+        align-items: center;
+        margin: clamp(-2rem, -2vw, -1rem) auto clamp(3rem, 8vw, 6rem);
+        padding: clamp(1rem, 3vw, 2rem);
+        border-top: 1px solid rgba(37, 89, 70, .22);
+        border-bottom: 1px solid rgba(37, 89, 70, .22);
+      }
+      .detail.reverse figure { order: 2; }
+      .detail figure { margin: 0; }
+      .detail img { display: block; width: 100%; max-height: 33rem; object-fit: cover; border-radius: .9rem; box-shadow: 0 .7rem 1.8rem rgba(18, 53, 40, .16); }
+      .detail.portrait img { max-height: 36rem; object-position: center; }
+      .detail-copy { padding: clamp(.5rem, 2vw, 1.5rem); }
+      .detail-copy h3 { margin: 0 0 .7rem; color: var(--leaf); font-size: clamp(1.35rem, 3vw, 2rem); line-height: 1.1; }
+      .detail-copy p { margin: 0; font-size: clamp(1.05rem, 2vw, 1.27rem); line-height: 1.55; }
+      .detail-label { margin: 0 0 .6rem !important; color: var(--rust); font-family: system-ui, sans-serif; font-size: .72rem !important; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
       .promise {
         padding: clamp(1.6rem, 5vw, 3rem);
         border-radius: 1.25rem;
@@ -107,10 +146,12 @@
       footer { padding: 1.5rem; background: #163d30; color: #e9f1dc; text-align: center; font-family: system-ui, sans-serif; font-size: .9rem; line-height: 1.55; }
       footer p { max-width: 55rem; margin: .25rem auto; }
 
-      @media (min-width: 52rem) {
-        .spread { display: grid; grid-template-columns: 1.35fr .9fr; align-items: center; }
-        .spread:nth-child(even) img { order: 2; }
-        .spread:nth-child(even) .words { order: 1; }
+      @media (max-width: 40rem) {
+        .spread { min-height: 37rem; }
+        .words { width: calc(100% - 2rem); margin: 1rem; }
+        .detail { grid-template-columns: 1fr; }
+        .detail.reverse figure { order: initial; }
+        .detail.portrait img { max-height: 31rem; }
       }
       @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
     </style>
@@ -136,6 +177,17 @@
         </div>
       </article>
 
+      <aside class="detail" aria-label="A closer look at Mira">
+        <figure>
+          <img src="images/detail-mira-notices.png" loading="lazy" alt="Mira the squirrel pauses on a mossy branch, holding rowan berries as she notices distant smoke." />
+        </figure>
+        <div class="detail-copy">
+          <p class="detail-label">A closer look</p>
+          <h3>Mira noticed the smallest things.</h3>
+          <p>Her whiskers quivered. Her bright eyes searched the hills. Being brave, she thought, could begin with paying attention.</p>
+        </div>
+      </aside>
+
       <article class="spread" id="page-2">
         <img src="images/02-acorn-alarm.png" alt="Otis rings an acorn bell as woodland animals gather beside a stream." />
         <div class="words">
@@ -156,6 +208,17 @@
         </div>
       </article>
 
+      <aside class="detail portrait reverse" aria-label="A closer look at Pip helping a duckling">
+        <figure>
+          <img src="images/detail-pip-helps.png" loading="lazy" alt="Pip the hedgehog helps a small duckling step across stones in a clear stream while a frog watches." />
+        </figure>
+        <div class="detail-copy">
+          <p class="detail-label">A closer look</p>
+          <h3>One careful step at a time.</h3>
+          <p>“I’ll stay beside you,” Pip told the smallest duckling. The stones were slippery, but together they made a bright, splashy bridge.</p>
+        </div>
+      </aside>
+
       <article class="spread" id="page-4">
         <img src="images/04-safe-meadow.png" alt="The woodland animals safely reunite in a sunny meadow by the stream." />
         <div class="words">
@@ -175,6 +238,17 @@
           <p>Together they would protect streams, grow native trees and ask people to care for the Earth: use clean energy, travel kindly, and speak up for every living thing.</p>
         </div>
       </article>
+
+      <aside class="detail" aria-label="A closer look at the animals' climate plan">
+        <figure>
+          <img src="images/detail-council-plan.png" loading="lazy" alt="Otis and Pip make a forest plan from pebbles, leaves, sticks, an acorn and a young oak shoot on a tree stump." />
+        </figure>
+        <div class="detail-copy">
+          <p class="detail-label">A closer look</p>
+          <h3>A map made by many friends.</h3>
+          <p>Pebbles became a stream. Petals became a sun. A tiny oak shoot showed the future they wanted: a cooler, kinder forest for every creature.</p>
+        </div>
+      </aside>
 
       <section class="promise" aria-label="The forest's promise">
         <h2>Small paws. Big voices. One living world.</h2>
