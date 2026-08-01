@@ -42,7 +42,7 @@
         padding: clamp(1.8rem, 6vw, 4rem);
         border: 1px solid rgba(255, 253, 244, .55);
         border-radius: 1.5rem;
-        background: rgba(20, 51, 39, .62);
+        background: linear-gradient(135deg, rgba(20, 51, 39, .52), rgba(20, 51, 39, .28));
         box-shadow: 0 1.25rem 4rem rgba(0, 0, 0, .28);
         backdrop-filter: blur(4px);
       }
@@ -73,15 +73,13 @@
         text-decoration: none;
       }
 
-      main { max-width: 78rem; margin: 0 auto; padding: clamp(1rem, 4vw, 3.5rem) 1rem 4rem; }
+      main { max-width: 78rem; margin: 0 auto; padding: clamp(1.25rem, 4vw, 3.5rem) 1rem 4rem; }
       .spread {
         position: relative;
         overflow: hidden;
         margin: 0 auto clamp(2.5rem, 7vw, 5rem);
         border-radius: 1.25rem;
         min-height: clamp(32rem, 60vw, 44rem);
-        display: flex;
-        align-items: end;
         background: #163d30;
         box-shadow: 0 .7rem 2.5rem rgba(18, 53, 40, .17);
       }
@@ -89,20 +87,28 @@
         content: "";
         position: absolute;
         inset: 0;
-        background: linear-gradient(90deg, rgba(17, 47, 36, .54), transparent 68%), linear-gradient(0deg, rgba(17, 47, 36, .18), transparent 38%);
+        pointer-events: none;
+        background: linear-gradient(90deg, rgba(251, 247, 233, .18), transparent 46%), linear-gradient(0deg, rgba(21, 58, 43, .18), transparent 28%);
       }
       .spread img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
       .words {
-        position: relative;
+        position: absolute;
+        top: clamp(1.5rem, 5vw, 4.25rem);
+        left: clamp(1.25rem, 5vw, 4.5rem);
         z-index: 1;
-        width: min(40rem, 92%);
-        margin: clamp(1rem, 4vw, 3.5rem);
-        padding: clamp(1.4rem, 4vw, 2.8rem);
-        border: 1px solid rgba(255, 253, 244, .65);
-        border-radius: 1rem;
-        background: rgba(255, 253, 244, .9);
-        box-shadow: 0 .75rem 2rem rgba(9, 34, 24, .24);
-        backdrop-filter: blur(6px);
+        width: min(34rem, 46%);
+        padding: clamp(.25rem, 1vw, .7rem) 0;
+        color: var(--ink);
+        text-shadow: 0 1px 0 rgba(255, 253, 244, .85), 0 0 .8rem rgba(255, 253, 244, .82);
+      }
+      .words::before {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        inset: -1.25rem -1.6rem;
+        border-radius: 50%;
+        background: radial-gradient(ellipse at 34% 45%, rgba(251, 247, 233, .56), rgba(251, 247, 233, .17) 54%, transparent 74%);
+        filter: blur(5px);
       }
       .number {
         margin: 0 0 .5rem;
@@ -113,22 +119,29 @@
         letter-spacing: .14em;
         text-transform: uppercase;
       }
-      h2 { margin: 0 0 .9rem; font-size: clamp(1.7rem, 4vw, 2.7rem); line-height: 1.08; }
-      .words p { margin: 0; font-size: clamp(1.12rem, 2.5vw, 1.45rem); line-height: 1.58; }
+      h2 { margin: 0 0 .7rem; font-size: clamp(1.8rem, 4vw, 2.7rem); line-height: 1.03; }
+      .words p { margin: 0; font-size: clamp(1.06rem, 2.05vw, 1.31rem); line-height: 1.52; }
       .words p + p { margin-top: .8rem; }
+      .spread:nth-of-type(3) .words { top: auto; bottom: clamp(1.5rem, 5vw, 4.25rem); }
+      .spread:nth-of-type(4) .words { top: clamp(1.5rem, 5vw, 3.4rem); left: auto; right: clamp(1.25rem, 5vw, 4.5rem); }
+      .spread:nth-of-type(5) .words { top: clamp(1.4rem, 4vw, 3rem); width: min(35rem, 48%); }
       .detail {
+        position: relative;
         display: grid;
         grid-template-columns: minmax(0, 1.15fr) minmax(14rem, .85fr);
         gap: clamp(1rem, 4vw, 3rem);
         align-items: center;
-        margin: clamp(-2rem, -2vw, -1rem) auto clamp(3rem, 8vw, 6rem);
-        padding: clamp(1rem, 3vw, 2rem);
-        border-top: 1px solid rgba(37, 89, 70, .22);
-        border-bottom: 1px solid rgba(37, 89, 70, .22);
+        margin: clamp(-2.2rem, -2vw, -1rem) auto clamp(3rem, 8vw, 6rem);
+        padding: clamp(1.4rem, 4vw, 3rem);
+        border-radius: 1.25rem;
+        background: linear-gradient(105deg, rgba(255, 253, 244, .86), rgba(232, 183, 83, .13));
+        box-shadow: 0 .75rem 2rem rgba(18, 53, 40, .08);
       }
+      .detail::before { content: "✦  ·  ✦"; position: absolute; top: .65rem; left: 50%; color: var(--rust); font-size: .75rem; letter-spacing: .22em; transform: translateX(-50%); opacity: .75; }
       .detail.reverse figure { order: 2; }
       .detail figure { margin: 0; }
-      .detail img { display: block; width: 100%; max-height: 33rem; object-fit: cover; border-radius: .9rem; box-shadow: 0 .7rem 1.8rem rgba(18, 53, 40, .16); }
+      .detail img { display: block; width: 100%; max-height: 33rem; object-fit: cover; border: .45rem solid #fffdf4; border-radius: .45rem; box-shadow: 0 .7rem 1.8rem rgba(18, 53, 40, .16); transform: rotate(-1.1deg); }
+      .detail.reverse img { transform: rotate(1.1deg); }
       .detail.portrait img { max-height: 36rem; object-position: center; }
       .detail-copy { padding: clamp(.5rem, 2vw, 1.5rem); }
       .detail-copy h3 { margin: 0 0 .7rem; color: var(--leaf); font-size: clamp(1.35rem, 3vw, 2rem); line-height: 1.1; }
@@ -148,7 +161,10 @@
 
       @media (max-width: 40rem) {
         .spread { min-height: 37rem; }
-        .words { width: calc(100% - 2rem); margin: 1rem; }
+        .spread::after { background: linear-gradient(0deg, rgba(251, 247, 233, .84) 0 43%, rgba(251, 247, 233, .08) 64%, transparent 78%); }
+        .words, .spread:nth-of-type(3) .words, .spread:nth-of-type(4) .words, .spread:nth-of-type(5) .words { top: auto; right: 1.4rem; bottom: 1.25rem; left: 1.4rem; width: auto; padding: 0; }
+        .words::before { inset: -1rem; background: none; }
+        .words p { font-size: 1.05rem; }
         .detail { grid-template-columns: 1fr; }
         .detail.reverse figure { order: initial; }
         .detail.portrait img { max-height: 31rem; }
